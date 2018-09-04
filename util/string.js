@@ -12,3 +12,12 @@ var RD = {
 exports.get_url = function(keyword){
     return url+encodeURIComponent(keyword);
 }
+
+exports.response = function(rc,rd){
+    var out = {
+        rc : rc,
+        rd : RD[rd]
+    };
+
+    return out;
+}

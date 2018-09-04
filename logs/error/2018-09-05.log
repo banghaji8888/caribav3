@@ -1,0 +1,4 @@
+2018-09-05 05:18:28 : TypeError: string.response is not a function
+2018-09-05 05:25:49 : TypeError: string.response is not a function
+2018-09-05 05:28:38 : TypeError: Cannot set property 'results' of undefined
+2018-09-05 05:31:00 : ReferenceError: key is not defined

@@ -11,7 +11,7 @@ var methodOverride = require('method-override');
 app.use(methodOverride());
 
 var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*'); // ubah ke IP FMSS nanti
+    res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'POST');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
 
