@@ -13,8 +13,6 @@ exports.get = function(url, callback){
     };
     
     request(options, function(err, res, body) {  
-        //var out = JSON.stringify(body);
-        //logger.info("RESPONSE " + url + " : "+out);
         logger.info(res.statusCode);
         if(res.statusCode == 200 || res.statusCode == 201)
             callback(body);
@@ -76,22 +74,4 @@ exports.put = function(url, params, callback){
         else
             callback("failed");
     });
-}
-
-exports.lion_api = function(url, callback){
-    try{
-        logger.info("REQUEST: " + url);
-
-        const options = {  
-            url: url,
-            method: 'GET'
-        };
-        
-        request(options, function(err, res, body) {
-            logger.info("RESPONSE  : "+body);
-            callback(body);
-        });
-    }catch(e){
-        logger.error(e);
-    }
 }
