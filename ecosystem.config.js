@@ -1,6 +1,6 @@
 module.exports = {
   apps : [{
-    name      : 'API',
+    name      : 'CaribaAPI V2',
     script    : 'server.js',
     env: {
       NODE_ENV: 'development'

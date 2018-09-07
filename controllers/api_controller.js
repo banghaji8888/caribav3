@@ -9,7 +9,7 @@ exports.search_in_store = function(req,res){
         if(totalKeywords <= 5){
             var promiseKeywords = [];
             for(var i in keywords){
-                var awaitRes = helper.search_promise(string.get_url(keywords[i]),'GET');
+                var awaitRes = helper.search_promise(string.get_url_toped(keywords[i]),'GET');
                 promiseKeywords.push(awaitRes);
             }
 
@@ -47,8 +47,9 @@ exports.search_in_store = function(req,res){
                             item['id'] = product['id'];
                             item['name'] = product['name'];
                             item['url'] = product['url'];
-                            item['image_url'] = product['image_url_300'];
-                            item['price'] = product['price'];
+                            item['image'] = product['image_url'];
+                            item['prety_price'] = product['price'];
+                            item['price'] = product['price_int'];
 
                             var i = index;
                             if(parseInt(stores[storeName]['data'].length) == 0){
@@ -89,3 +90,68 @@ exports.search_in_store = function(req,res){
     }
 }
 
+exports.search = function(req,res){
+    try{
+        var keyword = req.body.keyword;
+        var vendor = ["tokopedia","shopee"];
+        var promiseVendors = [];
+
+        for(var i in vendor){
+            var url = "";
+            if(vendor[i] == "shopee")
+                url = string.get_url_shopee(keyword);
+            else
+                url = string.get_url_toped(keyword);
+
+            var awaitRes = helper.search_promise(url,'GET',vendor[i]);
+            promiseVendors.push(awaitRes);
+        }
+
+        Promise.all(promiseVendors)
+            .then(values => {
+                var response = [];
+                var count = [];
+                var total = 0;
+                for(let val of values){
+                    var jsonData = JSON.parse(JSON.parse(val));
+                    var items;
+                    if("algorithm" in jsonData){
+                        // shopee
+                        items = helper.parse_shopee(jsonData['items']);
+                    }else{
+                        items = helper.parse_toped(jsonData['data']['products']);
+                    }
+
+                    total += items.length;
+                    response.push(items); 
+                    count.push(0); 
+                }
+                
+                var out = [];
+                var j = 0;
+                for(var i = 0; i < total; i++){
+                    var each = response[j][count[j]];
+                    if(each == null){
+                        count.splice(j,1);
+                        j -= 1;
+                        each = response[j][count[j]];
+                    } 
+
+                    out.push(each);
+
+                    count[j] = parseInt(count[j]) + 1;
+                    j++;
+
+                    if(j >= count.length) j = 0;
+                }   
+
+                res.json(out);
+            })
+            .catch(e => {
+                logger.error(e);
+            });
+    }catch(e){
+        logger.error(e);
+        res.json(string.response("99","general_error"));
+    }
+}
