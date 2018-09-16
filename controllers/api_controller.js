@@ -17,7 +17,7 @@ exports.search_in_store = function(req,res){
             .then(values => {
                 if(parseInt(values.length) == totalKeywords){
                     var stores = {};
-                    var response = {};
+                    var response = [];
                     
                     var index = 0;
                     for(let val of values){
@@ -66,7 +66,7 @@ exports.search_in_store = function(req,res){
                     for(var title in stores){
                         var products = stores[title]['data'];
                         if(parseInt(products.length) == parseInt(values.length)){
-                            response[title] = stores[title];
+                            response.push(stores[title]);
                         }
                     }
 
@@ -93,7 +93,8 @@ exports.search_in_store = function(req,res){
 exports.search = function(req,res){
     try{
         var keyword = req.body.keyword;
-        var vendor = ["tokopedia","shopee"];
+        logger.info(keyword);
+        var vendor = ["tokopedia"];
         var promiseVendors = [];
 
         for(var i in vendor){
